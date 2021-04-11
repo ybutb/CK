@@ -1,0 +1,25 @@
+# Use this config in redis migration.
+Data:
+    civilizations:
+        - "Rome" # to object
+        - "China"
+        - "Egypt"
+        - "Schumer"
+    researches:
+        - "wheel"
+        - "math"
+        - "money"
+        - "iron"
+        - "bow"
+    buildings:
+        - "temple"
+        - "hall"
+        - "warhouse"
+    units:
+        - "peasant"
+        - "slave"
+        - "warrior"
+        - "bowman"
+        - "colonist"
+        - "trader"
+        - "horseman"
