@@ -3,7 +3,7 @@ package Entity;
 public class Civilization {
     private int id;
     private int playerId;
-    private int name;
+    private String name;
 
     public int getId() {
         return id;
@@ -21,11 +21,11 @@ public class Civilization {
         this.playerId = playerId;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 }

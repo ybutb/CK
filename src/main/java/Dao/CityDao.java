@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 import java.util.Map;
 
-public class CivilizationDao extends BaseDao {
+public class CityDao extends BaseDao {
     private static final String CIV_PREFIX = "civilization:id:";
     private static final Gson GSON = new Gson();
 
