@@ -23,3 +23,9 @@ Data:
         - "colonist"
         - "trader"
         - "horseman"
+    city_properties:
+        - ""
+    building_properties:
+        - ""
+    unit_properties:
+        - ""

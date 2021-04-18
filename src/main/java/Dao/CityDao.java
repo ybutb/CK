@@ -1,44 +1,93 @@
 package Dao;
 
+import Entity.Building;
+import Entity.City;
 import Entity.Civilization;
-import Entity.Player;
+import Entity.Property;
 import com.google.gson.Gson;
 
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CityDao extends BaseDao {
-    private static final String CIV_PREFIX = "civilization:id:";
+    private static final String PREFIX = "city:id:";
     private static final Gson GSON = new Gson();
 
-    // civilization:id:1 name test
-    // civilization:id:1 player.id 1
-    // HGET civilization:id:1 player.id => 1
-    // HGET civilization:id:1 => all props
+    // city:id:1 name test
+    // city:id:1 prop.id 1
+    // HGET city:id:1 buildings 1,2,5
+    // HGET city:id:1 => all props
 
-    public Civilization assignPlayer(Civilization civilization, Player player) throws Exception {
-        String userKey = CIV_PREFIX + civilization.getId();
-        String userValue = GSON.toJson(player.getId());
+    public City addBuilding(Building building, City city) throws Exception
+    {
+        String cityKey   = PREFIX + city.getId();
+        String cityValue = GSON.toJson(building.getId());
 
-        insert(userKey, userValue);
-        civilization.setPlayerId(player.getId());
+        insert(cityKey, cityValue);
+        city.setCivilizationId(building.getId());
 
-        return civilization;
+        return city;
     }
 
-    public Civilization find(int id) throws Exception {
-        String key = CIV_PREFIX + id;
-        Map<String, String> civilizationData = fetchMap(key);
+    public City assignCivilization(Civilization civ, City city) throws Exception
+    {
+        String civKey   = PREFIX + city.getId();
+        String civValue = GSON.toJson(civ.getId());
 
-        if (civilizationData.isEmpty()) {
-            throw new Exception("Wrong civ id - not found.");
+        insert(civKey, civValue);
+        city.setCivilizationId(civ.getId());
+
+        return city;
+    }
+
+    public static City find(int id) {
+        String key = PREFIX + id;
+        Map<String, String> cityData = fetchMap(key);
+
+        if (cityData.isEmpty()) {
+            System.out.println("Test");
         }
 
-        Civilization civ = new Civilization();
+        City city = new City();
 
-        civ.setId(id);
-        civ.setPlayerId(Integer.parseInt(civilizationData.get("player.id")));
-        civ.setName(civilizationData.get("name"));
+        city.setId(id);
+        city.setCivilizationId(Integer.parseInt(cityData.get("civilization.id")));
+        city.setName(cityData.get("name"));
+        city.setLevel(Integer.parseInt(cityData.get("level")));
 
-        return civ;
+        this.populateBuildings(city, cityData);
+        this.populateProps(city, cityData);
+
+        return city;
+    }
+
+    public void populateBuildings(City city, Map<String, String> cityData)
+    {
+        // 1,2,5 etc
+        String buildingIds = cityData.get("buildings");
+
+        List<Building> buildings = Stream.of(buildingIds.split(",")).parallel()
+                .filter(Objects::nonNull)
+                .map(Integer::parseInt)
+                .distinct()
+                .map(BuildingDao::find)
+                .collect(Collectors.toList());
+
+        city.setCityBuildings(buildings);
+    }
+
+    public void populateProps(City city, Map<String, String> cityData)
+    {
+        String propIds = cityData.get("props");
+
+        List<Property> properties = Stream.of(propIds.split(",")).parallel()
+                .filter(Objects::nonNull)
+                .map(Integer::parseInt)
+                .distinct()
+                .map(PropertyDao::find)
+                .collect(Collectors.toList());
+
+        city.setProps(properties);
     }
 }

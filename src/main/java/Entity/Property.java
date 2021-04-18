@@ -1,8 +1,9 @@
 package Entity;
 
-public class Player implements EntityInterface {
-    private int id;
-    private String name;
+public class Property implements EntityInterface {
+    int id;
+    String name;
+    String value;
 
     public int getId() {
         return id;
@@ -18,5 +19,13 @@ public class Player implements EntityInterface {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

@@ -1,6 +1,6 @@
 package Entity;
 
-public class Civilization {
+public class Civilization implements EntityInterface {
     private int id;
     private int playerId;
     private String name;

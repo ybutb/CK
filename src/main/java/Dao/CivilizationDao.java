@@ -25,12 +25,12 @@ public class CivilizationDao extends BaseDao {
         return civilization;
     }
 
-    public Civilization find(int id) throws Exception {
+    public Civilization find(int id) {
         String key = CIV_PREFIX + id;
         Map<String, String> civilizationData = fetchMap(key);
 
         if (civilizationData.isEmpty()) {
-            throw new Exception("Wrong civ id - not found.");
+            System.out.println("Error");
         }
 
         Civilization civ = new Civilization();
