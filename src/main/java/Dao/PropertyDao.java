@@ -14,7 +14,7 @@ public class PropertyDao extends BaseDao {
         Map<String, String> propertyData = fetchMap(key);
 
         if (propertyData.isEmpty()) {
-            System.out.println("Building not found: " + id);
+            System.out.println("property not found: " + id);
         }
 
         Property property = new Property();
