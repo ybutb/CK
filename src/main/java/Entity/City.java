@@ -1,9 +1,9 @@
 package Entity;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-public class City implements EntityInterface {
+public class City extends AbstractEntity {
     private int id;
     private int civilizationId;
     private String name;

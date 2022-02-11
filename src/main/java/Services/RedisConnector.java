@@ -1,4 +1,4 @@
-package Dao;
+package Services;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;

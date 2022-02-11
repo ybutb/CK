@@ -1,10 +1,6 @@
 package Dao;
 
-import Entity.Building;
-import Entity.City;
-import Entity.Civilization;
-import Entity.Property;
-import com.google.gson.Gson;
+import Entity.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +8,13 @@ import java.util.stream.Stream;
 
 public class CityDao extends BaseDao {
     private static final String PREFIX = "city:id:";
-    private static final Gson GSON = new Gson();
+    private final BuildingDao buildingDao;
+    private final PropertyDao propertyDao;
+
+    public CityDao() {
+        this.buildingDao = DaoFactory.getBuildingDao();
+        this.propertyDao = DaoFactory.getPropertyDao();
+    }
 
     // city:id:1 name test
     // city:id:1 prop.id 1
@@ -41,7 +43,7 @@ public class CityDao extends BaseDao {
         return city;
     }
 
-    public static City find(int id) {
+    public City find(int id) {
         String key = PREFIX + id;
         Map<String, String> cityData = fetchMap(key);
 
@@ -57,7 +59,7 @@ public class CityDao extends BaseDao {
         city.setLevel(Integer.parseInt(cityData.get("level")));
 
         this.populateBuildings(city, cityData);
-        this.populateProps(city, cityData);
+        populateProps(city, cityData);
 
         return city;
     }
@@ -71,7 +73,7 @@ public class CityDao extends BaseDao {
                 .filter(Objects::nonNull)
                 .map(Integer::parseInt)
                 .distinct()
-                .map(BuildingDao::find)
+                .map(this.buildingDao::find)
                 .collect(Collectors.toList());
 
         city.setCityBuildings(buildings);
@@ -85,9 +87,13 @@ public class CityDao extends BaseDao {
                 .filter(Objects::nonNull)
                 .map(Integer::parseInt)
                 .distinct()
-                .map(PropertyDao::find)
+                .map(this.propertyDao::find)
                 .collect(Collectors.toList());
 
         city.setProps(properties);
+    }
+
+    public void save(EntityInterface entity) {
+        this.insert(PREFIX + entity.getId(), GSON.toJson(entity));
     }
 }

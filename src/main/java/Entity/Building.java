@@ -2,7 +2,8 @@ package Entity;
 
 import java.util.List;
 
-public class Building implements EntityInterface {
+public class Building extends AbstractEntity
+{
     private int id;
     private String name;
     private City city;

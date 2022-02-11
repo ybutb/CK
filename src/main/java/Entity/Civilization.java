@@ -1,6 +1,6 @@
 package Entity;
 
-public class Civilization implements EntityInterface {
+public class Civilization extends AbstractEntity {
     private int id;
     private int playerId;
     private String name;

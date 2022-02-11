@@ -1,6 +1,6 @@
 package Entity;
 
-public class Player implements EntityInterface {
+public class Player extends AbstractEntity {
     private int id;
     private String name;
 

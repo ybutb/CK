@@ -9,9 +9,9 @@ import java.util.Map;
 public class PropertyDao extends BaseDao {
     private static final String PREFIX = "property:id:";
 
-    public static Property find(int id) {
+    public Property find(int id) {
         String key = PREFIX + id;
-        Map<String, String> propertyData = fetchMap(key);
+        Map<String, String> propertyData = this.fetchMap(key);
 
         if (propertyData.isEmpty()) {
             System.out.println("property not found: " + id);

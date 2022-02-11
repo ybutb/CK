@@ -1,19 +1,21 @@
+import Dao.BaseDao;
 import Dao.CivilizationDao;
-import Dao.DaoRegistry;
+import Dao.DaoFactory;
 import Entity.Civilization;
+import Entity.EntityInterface;
 import Entity.Player;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class TurnActionGenerator {
 
-    private final DaoRegistry registry;
     boolean over;
 
     public TurnActionGenerator() {
         over = false;
-
-        CivilizationDao civ = DaoRegistry.getInstance().findDao(new Civilization());
+        CivilizationDao civDao = DaoFactory.getCivilizationDao();
+        List<Civilization> civs = civDao.findAll();
     }
 
     public void makeActions(Player player) {

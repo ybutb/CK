@@ -13,9 +13,17 @@ import java.util.stream.Stream;
 public class BuildingDao extends BaseDao {
     private static final String PREFIX = "building:id:";
 
-    public static Building find(int id) {
+    private final CityDao cityDao;
+    private final PropertyDao propertyDao;
+
+    public BuildingDao() {
+        this.cityDao = DaoFactory.getCityDao();
+        this.propertyDao = DaoFactory.getPropertyDao();
+    }
+
+    public Building find(int id) {
         String key = PREFIX + id;
-        Map<String, String> buildingData = fetchMap(key);
+        Map<String, String> buildingData = this.fetchMap(key);
 
         if (buildingData.isEmpty()) {
             System.out.println("Building not found: " + id);
@@ -27,7 +35,7 @@ public class BuildingDao extends BaseDao {
         building.setName(buildingData.get("name"));
 
         int cityId = Integer.parseInt(buildingData.get("city"));
-        City city = CityDao.find(cityId);
+        City city = this.cityDao.find(cityId);
         building.setCity(city);
 
         return building;
@@ -41,7 +49,7 @@ public class BuildingDao extends BaseDao {
                 .filter(Objects::nonNull)
                 .map(Integer::parseInt)
                 .distinct()
-                .map(PropertyDao::find)
+                .map(this.propertyDao::find)
                 .collect(Collectors.toList());
 
         city.setProps(properties);

@@ -1,6 +1,6 @@
 package Entity;
 
-public class Property implements EntityInterface {
+public class Property extends AbstractEntity {
     int id;
     String name;
     String value;

@@ -1,6 +1,6 @@
 package Entity;
 
-public class Unit  implements EntityInterface {
+public class Unit extends AbstractEntity {
     private int id;
     private int civilizationId;
     private String name;

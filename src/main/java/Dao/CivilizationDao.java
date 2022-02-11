@@ -4,8 +4,8 @@ import Entity.Civilization;
 import Entity.Player;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CivilizationDao extends BaseDao {
     private static final String CIV_PREFIX = "civilization:id:";
@@ -43,17 +43,21 @@ public class CivilizationDao extends BaseDao {
         return civ;
     }
 
-    public ArrayList<Civilization> findAll() {
-        String key = CIV_PREFIX;
-        Map<String, String> civilizationData = fetchMap(key);
+    public List<Civilization> findAll() {
+        Set<Map<String, String>> civilizationsData = fetchAll(CIV_PREFIX);
 
-        if (civilizationData.isEmpty()) {
+        if (civilizationsData.isEmpty()) {
             System.out.println("Error");
         }
 
+        return civilizationsData.stream().map(this::populateEntityFromData).collect(Collectors.toList());
+    }
+
+    private Civilization populateEntityFromData(Map<String, String> civilizationData)
+    {
         Civilization civ = new Civilization();
 
-        civ.setId(id);
+        civ.setId(Integer.parseInt(civilizationData.get("id")));
         civ.setPlayerId(Integer.parseInt(civilizationData.get("player.id")));
         civ.setName(civilizationData.get("name"));
 

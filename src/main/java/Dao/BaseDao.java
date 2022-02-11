@@ -1,46 +1,36 @@
 package Dao;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import Services.RedisClient;
+import com.google.gson.Gson;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class BaseDao {
-    private static final JedisPool jedisPool = RedisConnector.getJedisPool();
-    private static final String SUFFIX = ":*";
+    protected static final Gson GSON = new Gson();
+    final private RedisClient client = new RedisClient();
 
     public Map<String, String> insert(String userKey, String userValue) {
-        getConnection().set(userKey, userValue);
-        String value = getConnection().get(userKey);
-        Map<String, String> result = new HashMap<>();
-        result.put(userKey, value);
-
-        return result;
+       return this.client.insert(userKey, userValue);
     }
 
     public Map<String, String> insert(String key, String field, String value) {
-        getConnection().hset(key, field, value);
-        return getConnection().hgetAll(key);
+        return this.client.insert(key, field, value);
     }
 
-    public static Map<String, String> fetchMap(String key) {
-        return getConnection().hgetAll(key);
+    protected Map<String, String> fetchMap(String key) {
+        return this.client.fetchMap(key);
     }
 
     public String fetch(String key) {
-        return getConnection().get(key);
+        return this.client.fetch(key);
     }
 
     public Set<String> findKeys(String prefix) {
-        return getConnection().keys(prefix+SUFFIX);
+        return this.client.findKeys(prefix);
     }
 
-    private static Jedis getConnection() {
-        try (Jedis jedis = jedisPool.getResource()) {
-            return jedis;
-        } catch (Exception e) { // TODO: handle multithreading waiting for connection to be available.
-            e.printStackTrace();
-            throw e;
-        }
+    public Set<Map<String, String>> fetchAll(String key) {
+        return this.findKeys(key).stream().map(this::fetchMap).collect(Collectors.toSet());
     }
 }
